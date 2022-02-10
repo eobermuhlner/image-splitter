@@ -10,11 +10,17 @@ OPTIONS
   -w pixels
   --width pixels
     Splits the input image into images with the specified width in pixels.
+
   -h pixels
   --height pixels
     Splits the input image into images with the specified height in pixels.
+
   -f format
   --format format
     Format of the output images (png, jpg, bmp).
+
+  -v
+  --version
+    Prints the version number.
 ```
 

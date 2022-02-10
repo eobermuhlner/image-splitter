@@ -12,6 +12,8 @@ import static java.lang.Math.min;
 
 public class ImageSplitter {
 
+  private static final String VERSION = "0.1";
+
   public static void main(String[] args) {
     Integer splitWidth = null;
     Integer splitHeight = null;
@@ -46,6 +48,10 @@ public class ImageSplitter {
             i++;
             format = args[i];
             break;
+          case "-v":
+          case "--version":
+            System.out.println("image-splitter " + VERSION);
+            System.exit(0);
           case "--help":
             printHelp();
             break;
@@ -116,12 +122,18 @@ public class ImageSplitter {
             + "  -w pixels\n"
             + "  --width pixels\n"
             + "    Splits the input image into images with the specified width in pixels.\n"
+            + "\n"
             + "  -h pixels\n"
             + "  --height pixels\n"
             + "    Splits the input image into images with the specified height in pixels.\n"
+            + "\n"
             + "  -f format\n"
             + "  --format format\n"
             + "    Format of the output images (png, jpg, bmp).\n"
+            + "\n"
+            + "  -v\n"
+            + "  --version\n"
+            + "    Prints the version number.\n"
     );
     System.exit(0);
   }

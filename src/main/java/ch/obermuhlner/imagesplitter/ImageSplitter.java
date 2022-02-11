@@ -1,18 +1,23 @@
 package ch.obermuhlner.imagesplitter;
 
 import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageWriterSpi;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.min;
 
 public class ImageSplitter {
 
-  private static final String VERSION = "0.1";
+  private static final String VERSION = "0.2";
 
   public static void main(String[] args) {
     Integer splitWidth = null;
@@ -48,12 +53,17 @@ public class ImageSplitter {
             i++;
             format = args[i];
             break;
+          case "--supported":
+            printSupportedFormats();
+            System.exit(0);
+            break;
           case "-v":
           case "--version":
             System.out.println("image-splitter " + VERSION);
             System.exit(0);
           case "--help":
             printHelp();
+            System.exit(0);
             break;
           default:
             System.err.println("Unknown option: " + args[i]);
@@ -83,6 +93,7 @@ public class ImageSplitter {
 
     if (filenames.isEmpty()) {
       printHelp();
+      System.exit(0);
     }
 
     for (String filename : filenames) {
@@ -102,8 +113,8 @@ public class ImageSplitter {
             );
 
             String outputName = filename + "_" + counter + "." + format;
-            System.out.println("Writing " + outputName + " x=" + x + " y=" + y + " w=" + width + " h=" + height);
-            ImageIO.write(subImage, format, new File(outputName));
+            System.out.println("Writing " + outputName + " x=" + x + " y=" + y + " width=" + width + " height=" + height);
+            ImageIO.write(subImage, format.toLowerCase(), new File(outputName));
             counter++;
           }
         }
@@ -122,10 +133,12 @@ public class ImageSplitter {
             + "  -w pixels\n"
             + "  --width pixels\n"
             + "    Splits the input image into images with the specified width in pixels.\n"
+            + "    If this argument is not specified the full width of each image is used.\n"
             + "\n"
             + "  -h pixels\n"
             + "  --height pixels\n"
             + "    Splits the input image into images with the specified height in pixels.\n"
+            + "    If this argument is not specified the full height of each image is used.\n"
             + "\n"
             + "  -f format\n"
             + "  --format format\n"
@@ -134,8 +147,26 @@ public class ImageSplitter {
             + "  -v\n"
             + "  --version\n"
             + "    Prints the version number.\n"
+            + "\n"
+            + "  --help\n"
+            + "    Prints this help text.\n"
     );
-    System.exit(0);
+  }
+
+  private static void printSupportedFormats() {
+    Set<String> formats = new LinkedHashSet<>();
+
+    Iterator<ImageWriterSpi> serviceProviders = IIORegistry.getDefaultInstance()
+        .getServiceProviders(ImageWriterSpi.class, true);
+
+    while (serviceProviders.hasNext()) {
+      ImageWriterSpi serviceProvider = serviceProviders.next();
+      formats.add(serviceProvider.getFileSuffixes()[0]);
+    }
+
+    for (String format : formats) {
+      System.out.println("  " + format);
+    }
   }
 
   private static int calculateSize(int imageSize, Integer splitSize, Double splitSizePercent) {

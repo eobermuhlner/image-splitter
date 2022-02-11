@@ -6,14 +6,19 @@ Command line tool to split an image into multiple slices with a specified width 
 
 ```
 USAGE image-splitter [options] [files]
+
+Splits the input image files into multiple slices with a specified width and/or height.
+
 OPTIONS
   -w pixels
   --width pixels
     Splits the input image into images with the specified width in pixels.
+    If this argument is not specified the full width of each image is used.
 
   -h pixels
   --height pixels
     Splits the input image into images with the specified height in pixels.
+    If this argument is not specified the full height of each image is used.
 
   -f format
   --format format
@@ -22,6 +27,9 @@ OPTIONS
   -v
   --version
     Prints the version number.
+
+  --help
+    Prints this help text.
 ```
 
 # Examples

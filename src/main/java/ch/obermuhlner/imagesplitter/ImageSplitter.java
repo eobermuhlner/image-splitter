@@ -129,6 +129,9 @@ public class ImageSplitter {
   private static void printHelp() {
     System.out.println(
             "USAGE image-splitter [options] [files]\n"
+            + "\n"
+            + "Splits the input image files into multiple slices with a specified width and/or height.\n"
+            + "\n"
             + "OPTIONS\n"
             + "  -w pixels\n"
             + "  --width pixels\n"
